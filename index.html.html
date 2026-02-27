@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SkyTrack Baggage System</title>
+  <style>
+body {
+  margin: 0;
+  font-family: 'Segoe UI', Arial, sans-serif;
+  background: #f6fcfe;
+}
+.hero {
+  background: linear-gradient(90deg, #22b4eb 0, #32b3c6 90%);
+  color: #fff;
+  padding: 72px 0 60px 0;
+  text-align: center;
+  box-shadow: 0 2px 24px #b4e5f7;
+}
+.hero-title {
+  font-size: 2.8em;
+  font-weight: 700;
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+}
+.hero-sub {
+  font-size: 1.22em;
+  font-weight: 400;
+}
+.real-time-badge {
+  display: inline-block;
+  background: #ffeeb0;
+  color: #236799;
+  border-radius: 40px;
+  font-size: 1em;
+  font-weight: 600;
+  padding: 10px 26px 10px 30px;
+  margin-bottom: 19px;
+  letter-spacing: 0.04em;
+}
+.center-flex { display: flex; justify-content: center; align-items: flex-start; gap: 40px; margin-top: 26px; }
+@media (max-width: 850px) { .center-flex { flex-direction: column; align-items: center; } }
+.card-choice {
+  background: #fff; border-radius: 20px; box-shadow: 0 4px 24px #d0effb8c;
+  width: 320px; padding: 46px 30px 38px 30px; text-align: center;
+  cursor: pointer; transition: box-shadow 0.16s, border 0.1s;
+  border: 2.5px solid transparent;
+}
+.card-choice h2 { margin-top: 0; font-size: 1.38em; }
+.card-choice:hover { border: 2.5px solid #22b4eb; box-shadow: 0 4px 36px #21b6e84d; }
+.icon-span { font-size: 2.0em; margin-bottom: 10px; display:block; }
+.panel-main {
+  background: #fff; border-radius: 17px; box-shadow: 0 4px 26px #bdeefd62;
+  width: 430px; margin: 46px auto 0 auto;
+  padding: 38px 32px 28px 32px;
+  min-height: 345px;
+  display: flex; flex-direction: column; align-items: stretch;
+}
+@media (max-width: 550px) { .panel-main { width:98vw; } }
+.backlink {
+  display: block; color: #17a1d9; text-decoration: underline; cursor: pointer;
+  margin-bottom: 15px; font-weight: 500; font-size: 1.08em;
+}
+input[type=text] {
+  padding: 10px 13px; font-size: 1.07em; margin: 9px 5px 14px 0;
+  border: 1.6px solid #89d9ef; border-radius: 8px;
+  width: 213px; background: #f7fbfc; outline: none;
+}
+button {
+  padding: 9px 24px; border: none; border-radius: 8px;
+  background: linear-gradient(90deg,#33c5ef,#2db5ce 92%);
+  color: #fff; font-size: 1.07em; font-weight: 600;
+  margin: 7px 0 7px 0; cursor: pointer; transition: background 0.18s;
+}
+button:hover {
+  background: linear-gradient(90deg, #33b2e9, #24abc7 92%);
+}
+.baggage-details {
+  margin: 26px 0 0 0; padding-bottom: 4px;
+  background: #f7fbfc; border-radius:10px; box-shadow: 0 2px 10px #e8f6ff30;
+  padding: 18px 20px 13px 20px;
+}
+.baggage-title { font-size: 1.09em; margin-bottom:5px; }
+.status-badge {
+  font-weight: 700; border-radius: 7px; padding: 2px 9px;
+  font-size: 1em; margin-left:4px;
+}
+.delivered { color: #20943b; background: #ebfce7; }
+.in-transit { color: #f3b002; background: #fff6df; }
+.detail-label { font-weight:600; color: #2689da;}
+.timeline { margin: 0 0 13px 0; padding-left: 26px;
+  color: #177dc5; font-size: 1em;}
+.timeline li, .baggage-info span { margin-bottom: 4px; }
+.timeline li.active { font-weight: 700; color: #20943b; }
+.dashboard-main {
+  background: #fff;
+  border-radius: 20px;
+  box-shadow: 0 4px 26px #c7f2ff49;
+  width: 930px;
+  margin: 48px auto 0 auto;
+  padding: 37px 32px 32px 32px;
+}
+@media (max-width: 1050px) {
+  .dashboard-main { width:98vw; }
+}
+.dash-top {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+.dash-stats {
+  display: flex; gap: 36px;
+}
+.stat-box {
+  background: #f6fcfe;
+  border-radius: 12px;
+  font-weight: 700;
+  color: #222;
+  font-size: 1.07em;
+  padding: 17px 19px 14px 19px;
+  box-shadow: 0 2px 10px #d8f1ff42;
+  min-width: 110px;
+  text-align: center;
+}
+@media (max-width:500px) {
+  .stat-box { min-width: 75px; }
+}
+.cards-area { display: flex; gap: 26px; flex-wrap: wrap; margin-top:15px; }
+.baggage-card {
+  background: #f7fbfd;
+  border-radius: 14px;
+  box-shadow: 0 2px 9px #b9e1fc36;
+  padding: 21px 20px 16px 20px;
+  margin-bottom: 18px;
+  width: 260px;
+  min-height:150px;
+  position: relative;
+}
+.baggage-card .stat-label {
+  font-weight: 600; font-size:1.02em; margin-bottom:6px;
+  color:#2389b4;
+}
+.baggage-card .value-label { font-weight: 500;}
+.baggage-card .status-badge { position: absolute; top:15px; right:16px;}
+.filter-bar {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 2px 9px #e7f5fb60;
+  margin-bottom: 24px;
+  padding: 28px 25px 19px 25px;
+  display: flex;
+  align-items: flex-end;
+  gap: 34px;
+  flex-wrap: wrap;
+}
+.filter-bar label { font-weight: 600; font-size: 1.08em; margin-bottom: 3px; display: block;}
+.filter-bar input[type="text"] {
+  font-size: 1.08em;
+  padding: 9px 15px;
+  border-radius: 6px;
+  border: 1.5px solid #c5e7f9;
+  width: 340px;
+  margin-right: 18px;
+  background: #f7fbfc;
+}
+.filter-bar select {
+  font-size: 1.08em;
+  padding: 9px 20px 9px 12px;
+  border-radius: 6px;
+  border: 1.5px solid #c5e7f9;
+  background: #f7fbfc;
+}
+@media (max-width: 1025px) {
+  .dashboard-main { width: 98vw !important; }
+  .filter-bar { flex-direction: column; align-items:flex-start; gap: 12px; }
+  .filter-bar input[type="text"], .filter-bar select { width:99%; }
+}
+  </style>
+</head>
+<body>
+<div class="hero">
+  <div class="real-time-badge">Real-Time Baggage Tracking</div>
+  <div class="hero-title">SkyTrack Baggage System</div>
+  <div class="hero-sub">
+    Track your luggage in real-time from check-in to delivery. Fast, reliable, and<br>secure baggage management.
+  </div>
+</div>
+<div id="app"></div>
+<script>
+const baggages = [
+  {
+    trackingNumber: 'BAG345',
+    passenger: 'John Smith',
+    flight: 'AA1234',
+    route: 'JFK → LAX',
+    weight: 23,
+    eta: 'Jan 15, 18:45',
+    status: 'In Transit',
+    timeline: [ 'Checked In', 'Security Check', 'Loaded on Aircraft', 'In Transit' ],
+    updated: 'Jan 15, 14:30',
+    location: 'A Block'
+  },
+  {
+    trackingNumber: 'BAG234',
+    passenger: 'Sarah Johnson',
+    flight: 'BA567',
+    route: 'ORD → LHR',
+    weight: 20,
+    eta: 'Jan 15, 11:30',
+    status: 'Delivered',
+    timeline: [ 'Checked In', 'Security Check', 'Loaded on Aircraft', 'In Transit', 'Arrived at Destination', 'Delivered' ],
+    updated: 'Jan 15, 12:00',
+    location: 'B Block'
+  },
+  {
+    trackingNumber: 'BAG123',
+    passenger: 'Michael Chen',
+    flight: 'DL890',
+    route: 'ATL → SFO',
+    weight: 25,
+    eta: 'Jan 15, 16:20',
+    status: 'Loaded on Aircraft',
+    timeline: [ 'Checked In', 'Security Check', 'Loaded on Aircraft' ],
+    updated: 'Jan 15, 13:15',
+    location: 'C Block'
+  },
+  // LIVE TRACKING BAG
+{
+  trackingNumber: 'BAG999',
+  passenger: 'Your Phone',
+  flight: 'CAMP123',
+  route: 'Campus Movement',
+  weight: 1,
+  eta: '---',
+  status: 'At Origin',
+  timeline: [
+    'At Origin', 'J Block', 'Admin Office', 'A Block', 'Delivered'
+  ],
+  updated: '',
+  location: 'At Origin',
+  isLive: true
+}
+
+];
+const locations = [
+  "Origin","J Block", "Admin Office","A Block", "Security Gate", "Destination"
+];
+const demo_locations = [
+  "At Origin", "J Block", "Admin Office", "A Block", "Delivered"
+];
+
+const app = document.getElementById('app');
+
+function showHome() {
+  app.innerHTML = `
+    <div class="center-flex" style="margin-top:42px;">
+      <div class="card-choice" onclick="showPassenger()" tabindex="0">
+        <span class="icon-span">🧑‍✈️</span>
+        <h2>Passenger Portal</h2>
+        <div style="font-size: 1.09em;color:#187eb7;">Track your baggage status and<br>view flight information</div>
+      </div>
+      <div class="card-choice" onclick="showStaff()" tabindex="0">
+        <span class="icon-span">👩‍💼</span>
+        <h2>Staff Dashboard</h2>
+        <div style="font-size: 1.09em;color:#187eb7;">Manage and update baggage status<br>for all flights</div>
+      </div>
+    </div>
+  `;
+  window.showPassenger = showPassenger;
+  window.showStaff = showStaff;
+}
+// ------------- PASSENGER -------------
+function showPassenger() {
+  app.innerHTML = `
+    <div class="panel-main">
+      <span class="backlink" onclick="showHome()">← Back</span>
+      <div style="text-align:center;">
+        <h2>Find Your Baggage</h2>
+        <div style="font-size:1.04em;margin-bottom:14px;">
+          Enter your baggage tracking number (e.g. <span style="color:#21a1c6;">BAGPHONE001</span>)
+        </div>
+        <input type="text" id="trackingInput" placeholder="Enter Tracking Number" maxlength="15"/>
+        <button onclick="findBaggage()">Track</button>
+      </div>
+      <div class="result" id="result"></div>
+    </div>
+  `;
+  window.showHome = showHome;
+  window.findBaggage = findBaggage;
+}
+window._lastPassengerView = '';
+function findBaggage(trk, force) {
+  const id = typeof trk === "string" ? trk : document.getElementById('trackingInput').value.trim().toUpperCase();
+  window._lastPassengerView = id;
+  const result = document.getElementById('result');
+  if (!id) {
+    result.innerHTML = `<div style="margin-top:13px;color:#e03d23;font-weight:500">Please enter a tracking number.</div>`;
+    return;
+  }
+  const data = baggages.find(b => b.trackingNumber === id);
+  if (!data) {
+    result.innerHTML = `<div style="margin-top:13px;color:#e03d23;font-weight:500">Baggage not found.</div>`;
+    return;
+  }
+  let liveBadge = data.isLive ? '<span style="background:#e6ffb1;color:#865c0e;padding:4px 14px 4px 10px;border-radius:14px;margin-left:8px;font-weight:600;font-size:0.9em;">Live tracking ON</span>' : '';
+  let idx = typeof data._liveIndex === "number" ? data._liveIndex : (data.timeline.length - 1);
+  let statusNow = data.timeline[idx];
+  let timelineHtml = '';
+  for(let i=0; i<data.timeline.length; ++i) {
+    const isActive = i === idx;
+    timelineHtml += `<li class="${isActive ? 'active' : ''}">${data.timeline[i]}</li>`;
+  }
+  result.innerHTML = `
+    <div class="baggage-details">
+      <div class="baggage-title"><strong>Baggage Details</strong> ${liveBadge}</div>
+      <div class="baggage-info">
+        <span class="detail-label">Tracking Number:</span> ${data.trackingNumber}<br>
+        <span class="detail-label">Passenger:</span> ${data.passenger}<br>
+        <span class="detail-label">Status:</span>
+          <span class="status-badge ${statusNow==='Delivered'?'delivered':'in-transit'}">
+            ${statusNow}
+          </span><br>
+        <span class="detail-label">Location:</span> <b>${data.location || '-'}</b><br>
+        <span class="detail-label">Flight:</span> ${data.flight}<br>
+        <span class="detail-label">Route:</span> ${data.route}<br>
+        <span class="detail-label">Weight:</span> ${data.weight} kg<br>
+        <span class="detail-label">Last Updated:</span> ${data.updated || '--'}<br>
+      </div>
+      <div style="margin-top: 15px;font-weight:600;">Journey Timeline</div>
+      <ul class="timeline">${timelineHtml}</ul>
+    </div>
+  `;
+}
+
+// ------------- STAFF DASHBOARD + FILTER -------------
+function showStaff() {
+  const total = baggages.length;
+  const delivered = baggages.filter(b => b.status === 'Delivered').length;
+  const inTransit = baggages.filter(
+    b => b.status && (b.status.includes('In Transit') || b.status.includes('Loaded'))
+  ).length;
+  const pending = total - delivered - inTransit;
+  const allStatuses = [
+    "All", "At Origin", "In J Block", "In A Block", "At Admin Office", "At Security Gate",
+    "In Transit", "Loaded on Aircraft", "Delivered"
+  ];
+  window.staffFilter = window.staffFilter || { search: "", status: "All" };
+  app.innerHTML = `
+    <div class="dashboard-main">
+      <span class="backlink" onclick="showHome()">← Back</span>
+      <div class="dash-top">
+        <h2 style="margin-bottom:0">Staff Dashboard</h2>
+        <div class="dash-stats">
+          <div class="stat-box">
+            Total Baggage<br><span style="font-size:1.3em;color:#179bd7;">${total}</span>
+          </div>
+          <div class="stat-box">
+            In Transit<br><span style="font-size:1.3em;color:#f3b002;">${inTransit}</span>
+          </div>
+          <div class="stat-box">
+            Delivered<br><span style="font-size:1.3em;color:#20943b;">${delivered}</span>
+          </div>
+          <div class="stat-box">
+            Pending<br><span style="font-size:1.3em;color:#ea880d;">${pending}</span>
+          </div>
+        </div>
+      </div>
+      <div class="filter-bar">
+        <div style="flex:2">
+          <label for="staffSearch"><span style="font-size:1.23em;vertical-align:middle;">&#128269;</span> 
+          Filter Baggage</label>
+          <input type="text" id="staffSearch" placeholder="Search by tracking number, passenger, or flight..." value="${window.staffFilter.search||''}"/>
+        </div>
+        <div style="flex:1">
+          <label for="staffStatus">Status Filter</label>
+          <select id="staffStatus">
+            ${allStatuses.map(s => `<option ${window.staffFilter.status===s?'selected':''}>${s}</option>`).join('')}
+          </select>
+        </div>
+      </div>
+      <div id="baggageCards"></div>
+    </div>
+  `;
+  renderBaggageCards();
+  document.getElementById('staffSearch').addEventListener('input', e => {
+    window.staffFilter.search = e.target.value;
+    renderBaggageCards();
+  });
+  document.getElementById('staffStatus').addEventListener('change', e => {
+    window.staffFilter.status = e.target.value;
+    renderBaggageCards();
+  });
+  window.showHome = showHome;
+  window.updateLocation = updateLocation;
+}
+
+function renderBaggageCards() {
+  const search = (window.staffFilter.search||"").toLowerCase();
+  const stat = window.staffFilter.status;
+  let filtered = baggages.filter(b => {
+    let match = (
+      b.trackingNumber.toLowerCase().includes(search) ||
+      b.passenger.toLowerCase().includes(search) ||
+      b.flight.toLowerCase().includes(search)
+    );
+    if (stat && stat !== "All") {
+      match = match && (b.status === stat);
+    }
+    return match;
+  });
+  document.getElementById('baggageCards').innerHTML = `
+    <div class="cards-area">
+      ${filtered.length === 0 ? '<div style="color:#cb233a;margin:20px 0;font-weight:600">No baggage matches.</div>' :
+        filtered.map((bag,i)=>`
+          <div class="baggage-card">
+            <div class="stat-label">
+              ${bag.trackingNumber} <span class="status-badge ${bag.status==='Delivered'?'delivered':'in-transit'}">${bag.status}</span>
+              ${bag.isLive?'<span style="background:#e6ffb1;color:#b09505;padding:4px 9px 4px 8px;border-radius:14px;margin-left:6px;font-weight:600;font-size:0.86em;">Live</span>':''}
+            </div>
+            <div><b>Passenger:</b> ${bag.passenger}</div>
+            <div><b>Flight:</b> ${bag.flight}</div>
+            <div><b>Route:</b> ${bag.route}</div>
+            <div><b>Weight:</b> ${bag.weight} kg</div>
+            <div><b>ETA:</b> ${bag.eta}</div>
+            <div><b>Updated:</b> ${bag.updated}</div>
+            <div><b>Current Location:</b> <b>${bag.location||'-'}</b></div>
+            <div><select id="locsel${i}">
+              ${locations.map(l=>`<option ${bag.location===l?'selected':''}>${l}</option>`).join('')}
+              </select>
+              <button onclick="updateLocation(${i})" style="margin-left:6px;">Update</button>
+            </div>
+          </div>
+        `).join('')}
+    </div>
+  `;
+}
+
+// Allow staff to override demo location if desired
+function updateLocation(idx) {
+  const locSel = document.getElementById('locsel'+idx);
+  baggages[idx].location = locSel.value;
+  baggages[idx].updated = new Date().toLocaleTimeString();
+  // Make the status reflect the location, if it matches a timeline entry
+  let matchIdx = baggages[idx].timeline.indexOf(locSel.value);
+  if(matchIdx !== -1) {
+    baggages[idx].status = baggages[idx].timeline[matchIdx];
+    baggages[idx]._liveIndex = matchIdx;
+  }
+  // Refresh UI
+  renderBaggageCards();
+  if (window._lastPassengerView === baggages[idx].trackingNumber && document.getElementById("result"))
+    findBaggage(baggages[idx].trackingNumber, true);
+}
+
+// --------- LIVE DEMO: the auto-moving phone bag
+let liveTrackingHandle = null;
+function startLiveTrackingDemo() {
+  const liveBag = baggages.find(b => b.isLive);
+  if (!liveBag) return;
+  let idx = 0;
+  liveBag.status = liveBag.timeline[idx];
+  liveBag.location = demo_locations[idx];
+  liveBag._liveIndex = idx;
+  if (liveTrackingHandle) clearInterval(liveTrackingHandle);
+  liveTrackingHandle = setInterval(() => {
+  if (idx < liveBag.timeline.length - 1) {
+    idx += 1;
+    liveBag.status = liveBag.timeline[idx];
+    liveBag.location = demo_locations[idx];
+    liveBag._liveIndex = idx;
+    liveBag.updated = new Date().toLocaleTimeString();
+    // (refresh UI)
+    if (window._lastPassengerView === liveBag.trackingNumber && document.getElementById("result")) {
+      findBaggage(liveBag.trackingNumber, true);
+    }
+    if (document.getElementById('baggageCards')) {
+      renderBaggageCards();
+    }
+  } else {
+    clearInterval(liveTrackingHandle); // Stop when reaching Delivered
+  }
+}, 20000);
+}
+
+// ---------- INIT ----------
+document.addEventListener('DOMContentLoaded', function() {
+  showHome();
+  startLiveTrackingDemo();
+});
+</script>
+</body>
+</html>
